@@ -1,21 +1,31 @@
 package controllers;
 
-import play.mvc.*;
+import com.typesafe.config.Config;
+import play.libs.Json;
+import play.mvc.Controller;
+import play.mvc.Result;
 
-/**
- * This controller contains an action to handle HTTP requests
- * to the application's home page.
- */
+import javax.inject.Inject;
+import java.util.Map;
+
 public class HomeController extends Controller {
 
-    /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     */
-    public Result index() {
-        return ok(views.html.index.render());
+    @Inject
+    public HomeController(Config config) {
+        _config = config;
     }
 
+    public Result index() {
+        var sanitizedConfigurationInformation = Map.of(
+            "version", _config.getString("version"),
+            "environment", _config.getString("environment")
+        );
+
+        var response = Map.of(
+            _config.getString("service_name"), sanitizedConfigurationInformation
+        );
+        return ok(Json.toJson(response));
+    }
+
+    private Config _config;
 }
