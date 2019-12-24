@@ -3,3 +3,4 @@
 # ~~~~
 
 GET     /                           controllers.HomeController.index
+POST    /correct                    controllers.CorrectionController.correct(request: Request)
