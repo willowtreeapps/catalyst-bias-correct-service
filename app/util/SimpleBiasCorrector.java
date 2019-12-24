@@ -3,7 +3,6 @@ package util;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class SimpleBiasCorrector implements BiasCorrector {
     @Inject
@@ -22,9 +21,10 @@ public class SimpleBiasCorrector implements BiasCorrector {
             return input;
         }
 
-        return Arrays.stream(tokens.getTokens())
+        var corrections = Arrays.stream(tokens.getTokens())
                 .map( token -> _corrections.getOrDefault(token, token))
-                .collect(Collectors.joining(" "));
+                .toArray(String[]::new);
+        return _textTokenizer.detokenize(new TextTokens(corrections));
     }
 
     private BiasDetector _biasDetector;
