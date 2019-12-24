@@ -1,6 +1,6 @@
 import com.google.inject.AbstractModule;
-import opennlp.tools.tokenize.SimpleTokenizer;
-import opennlp.tools.tokenize.Tokenizer;
+import com.google.inject.Provides;
+import opennlp.tools.tokenize.*;
 import util.*;
 
 public class Module extends AbstractModule {
@@ -12,5 +12,23 @@ public class Module extends AbstractModule {
 
         // Third-party
         bind(Tokenizer.class).to(SimpleTokenizer.class).asEagerSingleton();
+    }
+
+    @Provides
+    private static Detokenizer createDetokenizer() {
+        String[] tokens = new String[]{".", "!", "(", ")", "\"", "-", "?", "'"};
+
+        DetokenizationDictionary.Operation[] operations = new DetokenizationDictionary.Operation[]{
+                DetokenizationDictionary.Operation.MOVE_LEFT,
+                DetokenizationDictionary.Operation.MOVE_LEFT,
+                DetokenizationDictionary.Operation.MOVE_RIGHT,
+                DetokenizationDictionary.Operation.MOVE_LEFT,
+                DetokenizationDictionary.Operation.RIGHT_LEFT_MATCHING,
+                DetokenizationDictionary.Operation.MOVE_BOTH,
+                DetokenizationDictionary.Operation.MOVE_LEFT,
+                DetokenizationDictionary.Operation.MOVE_BOTH
+        };
+
+        return new DictionaryDetokenizer(new DetokenizationDictionary(tokens, operations));
     }
 }
