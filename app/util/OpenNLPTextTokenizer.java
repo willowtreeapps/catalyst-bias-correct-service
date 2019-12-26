@@ -9,7 +9,7 @@ public class OpenNLPTextTokenizer implements TextTokenizer {
     @Inject
     public OpenNLPTextTokenizer(Tokenizer tokenizer, Detokenizer detokenizer) {
         _tokenizer = tokenizer;
-        _detockenizer = detokenizer;
+        _detokenizer = detokenizer;
     }
 
     @Override
@@ -20,9 +20,9 @@ public class OpenNLPTextTokenizer implements TextTokenizer {
 
     @Override
     public String detokenize(TextTokens tokens) {
-        return _detockenizer.detokenize(tokens.getTokens(), null);
+        return _detokenizer.detokenize(tokens.getTokens(), null);
     }
 
     private Tokenizer _tokenizer;
-    private Detokenizer _detockenizer;
+    private Detokenizer _detokenizer;
 }
