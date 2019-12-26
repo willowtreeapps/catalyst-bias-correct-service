@@ -12,7 +12,7 @@ public class MapBackedBiasCorrector implements BiasCorrector {
 
     @Override
     public String correct(String input, Locale locale) {
-        var corrections = _correctionsByLocale.get(locale);
+        var corrections = getCorrectionsByLocaleOrLessSpecificVariant(locale);
         if (corrections == null) {
             return null;
         }
@@ -27,6 +27,16 @@ public class MapBackedBiasCorrector implements BiasCorrector {
             .skip(randomSuggestionIndex)
             .findFirst()
             .get();
+    }
+
+    private Map<String, Set<String>> getCorrectionsByLocaleOrLessSpecificVariant(Locale locale) {
+        var corrections = _correctionsByLocale.get(locale);
+        if (corrections != null) {
+            return corrections;
+        }
+
+        var languageLocale = new Locale(locale.getLanguage());
+        return _correctionsByLocale.get(languageLocale);
     }
 
     private Map<Locale, Map<String, Set<String>>> _correctionsByLocale;
