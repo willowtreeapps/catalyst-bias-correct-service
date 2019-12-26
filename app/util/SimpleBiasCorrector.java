@@ -2,6 +2,7 @@ package util;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Map;
 
 public class SimpleBiasCorrector implements BiasCorrector {
@@ -15,7 +16,7 @@ public class SimpleBiasCorrector implements BiasCorrector {
     }
 
     @Override
-    public String correct(String input) {
+    public String correct(String input, Locale locale) {
         var tokens = _textTokenizer.tokenize(input);
         if (! _biasDetector.isBiasDetected(tokens)) {
             return input;
