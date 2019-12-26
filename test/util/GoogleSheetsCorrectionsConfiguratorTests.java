@@ -16,9 +16,7 @@ public class GoogleSheetsCorrectionsConfiguratorTests {
         var parser = new CSVCorrectionsParser();
         var url = new File("test/util/GoogleSheetsCorrectionsTest.txt").toURI().toURL();
         var randomizer = new MonoatomicallyIncrementingRandomizer();
-        var biasDetector = new TestBiasDetector();
-        biasDetector.setBiasDetected(true);
-        var configurator = new GoogleSheetsCorrectionsConfigurator(url, parser, biasDetector, createTextTokenizer());
+        var configurator = new GoogleSheetsCorrectionsConfigurator(url, parser, new TestBiasDetector(true), createTextTokenizer());
 
         var corrector = configurator.createCorrector(randomizer);
         assertNotNull(corrector);
