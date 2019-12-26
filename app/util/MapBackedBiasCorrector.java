@@ -30,6 +30,10 @@ public class MapBackedBiasCorrector implements BiasCorrector {
     }
 
     private Map<String, Set<String>> getCorrectionsByLocaleOrLessSpecificVariant(Locale locale) {
+        if (locale == null) {
+            locale = Locale.ENGLISH;
+        }
+
         var corrections = _correctionsByLocale.get(locale);
         if (corrections != null) {
             return corrections;
