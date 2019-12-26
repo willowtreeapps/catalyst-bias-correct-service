@@ -25,7 +25,7 @@ public class CorrectionController extends Controller {
         var response = Map.of(
             "input", textToCorrect,
             "context", context,
-            "correction", correction
+            "correction", correction == null ? "" : correction
         );
         return ok(Json.toJson(response));
     }
