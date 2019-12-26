@@ -16,9 +16,11 @@ import java.util.Locale;
 import static java.util.stream.Collectors.toMap;
 
 public class GoogleSheetsCorrectionsConfigurator<TParser extends CorrectionsParser> implements CorrectionsConfigurator {
-    public GoogleSheetsCorrectionsConfigurator(URL startingUrl, TParser parser) {
+    public GoogleSheetsCorrectionsConfigurator(URL startingUrl, TParser parser, BiasDetector detector, TextTokenizer tokenizer) {
         _startingUrl = startingUrl;
         _parser = parser;
+        _detector = detector;
+        _tokenizer = tokenizer;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class GoogleSheetsCorrectionsConfigurator<TParser extends CorrectionsPars
                 .filter( tuple -> tuple != null)
                 .map( x -> Pair.with(x.getValue0(), _parser.parse(x.getValue1())))
                 .collect(toMap(x -> x.getValue0(), x -> Utility.collectIntoMapOfSuggestionsByTriggerWord(x.getValue1())));
-        return new MapBackedBiasCorrector(mapping, randomizer);
+        return new MapBackedBiasCorrector(mapping, randomizer, _detector, _tokenizer);
     }
 
     private static Pair<Locale, URL> GetLocaleAndURLFromRecord(CSVRecord record) {
@@ -68,4 +70,6 @@ public class GoogleSheetsCorrectionsConfigurator<TParser extends CorrectionsPars
 
     private URL _startingUrl;
     private TParser _parser;
+    private BiasDetector _detector;
+    private TextTokenizer _tokenizer;
 }
