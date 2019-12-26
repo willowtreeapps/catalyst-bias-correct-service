@@ -7,4 +7,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.13.1"
 
-libraryDependencies += guice
+libraryDependencies ++= Seq(
+  guice,
+  "org.apache.opennlp" % "opennlp-tools" % "1.9.1"
+)
