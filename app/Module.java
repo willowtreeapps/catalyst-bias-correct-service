@@ -8,7 +8,9 @@ public class Module extends AbstractModule {
         // Application
         bind(TextTokenizer.class).to(OpenNLPTextTokenizer.class);
         bind(BiasDetector.class).to(EnglishFemalePronounBiasDetector.class);
-        bind(BiasCorrector.class).to(SimpleBiasCorrector.class).asEagerSingleton();
+        bind(Randomizer.class).to(SimpleRandomizer.class);
+
+        bind(BiasCorrector.class).toProvider(GoogleSheetsBackedBiasDetectorProvider.class).asEagerSingleton();
 
         // Third-party
         bind(Tokenizer.class).to(SimpleTokenizer.class).asEagerSingleton();
