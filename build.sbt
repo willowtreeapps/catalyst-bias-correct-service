@@ -9,5 +9,6 @@ scalaVersion := "2.13.1"
 
 libraryDependencies ++= Seq(
   guice,
+  "org.apache.commons" % "commons-csv" % "1.7",
   "org.apache.opennlp" % "opennlp-tools" % "1.9.1"
 )
