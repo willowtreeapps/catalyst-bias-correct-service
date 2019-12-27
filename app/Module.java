@@ -14,6 +14,7 @@ public class Module extends AbstractModule {
 
         // Third-party
         bind(Tokenizer.class).to(SimpleTokenizer.class).asEagerSingleton();
+        bind(LanguageDetector.class).to(TikaLanguageDetector.class).asEagerSingleton();
     }
 
     @Provides
