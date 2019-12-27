@@ -20,12 +20,12 @@ public class CorrectionController extends Controller {
     public Result correct(Http.Request request) {
         var textToCorrect = getString(request, TextFieldName);
         var context = getString(request, ContextFieldName);
-        var correction = _biasCorrector.correct(textToCorrect);
+        var correction = _biasCorrector.correct(textToCorrect, null);
 
         var response = Map.of(
             "input", textToCorrect,
             "context", context,
-            "correction", correction
+            "correction", correction == null ? "" : correction
         );
         return ok(Json.toJson(response));
     }
