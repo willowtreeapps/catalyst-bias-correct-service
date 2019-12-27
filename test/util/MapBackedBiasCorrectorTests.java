@@ -1,10 +1,6 @@
 package util;
 
-import opennlp.tools.tokenize.DetokenizationDictionary;
-import opennlp.tools.tokenize.DictionaryDetokenizer;
-import opennlp.tools.tokenize.SimpleTokenizer;
 import org.junit.Test;
-import org.w3c.dom.Text;
 
 import java.util.Locale;
 import java.util.Map;
