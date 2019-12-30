@@ -11,9 +11,14 @@ import util.LanguageDetector;
 import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Locale;
-import java.util.Map;
 
 public class CorrectionController extends Controller {
+    public static class CorrectResponse {
+        public String input;
+        public String context;
+        public String correction;
+    }
+
     @Inject
     public CorrectionController(BiasCorrector corrector, LanguageDetector languageDetector) {
         _biasCorrector = corrector;
@@ -30,11 +35,10 @@ public class CorrectionController extends Controller {
 
         var correction = _biasCorrector.correct(textToCorrect, locale);
 
-        var response = Map.of(
-            "input", textToCorrect,
-            "context", context,
-            "correction", correction == null ? "" : correction
-        );
+        var response = new CorrectResponse();
+        response.context = context;
+        response.correction = correction == null ? "" : correction;
+        response.input = textToCorrect;
         return ok(Json.toJson(response));
     }
 
