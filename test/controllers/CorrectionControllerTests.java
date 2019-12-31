@@ -7,10 +7,13 @@ import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.test.WithApplication;
+import util.MonoatomicallyIncrementingRandomizer;
+import util.Randomizer;
 
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
 
 public class CorrectionControllerTests extends WithApplication {
@@ -18,6 +21,7 @@ public class CorrectionControllerTests extends WithApplication {
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
                 .configure("google_sheets_configuration_url", "test/util/GoogleSheetsCorrectionsTest.txt")
+                .overrides(bind(Randomizer.class).to(MonoatomicallyIncrementingRandomizer.class))
                 .build();
     }
 
