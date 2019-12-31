@@ -3,6 +3,7 @@ import com.google.inject.Provider;
 import com.typesafe.config.Config;
 import util.*;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -11,7 +12,17 @@ public class GoogleSheetsBackedBiasDetectorProvider implements Provider<BiasCorr
     public GoogleSheetsBackedBiasDetectorProvider(Config config, Randomizer randomizer, BiasDetector detector, TextTokenizer tokenizer) throws MalformedURLException {
         _randomizer = randomizer;
 
-        var startingUrl = new URL(config.getString("google_sheets_configuration_url"));
+        var urlString = config.getString("google_sheets_configuration_url");
+        URL startingUrl = null;
+
+        try {
+            startingUrl = new URL(urlString);
+        } catch (MalformedURLException e) {}
+
+        if (startingUrl == null) {
+            startingUrl = new File(urlString).toURI().toURL();
+        }
+
         _configurator = new GoogleSheetsCorrectionsConfigurator<>(startingUrl, new CSVCorrectionsParser(), detector, tokenizer);
     }
 

@@ -15,7 +15,7 @@ public class GoogleSheetsCorrectionsConfiguratorTests {
     public void TestFetchingGoogleSheetsCorrectionsConfigurator() throws MalformedURLException {
         var parser = new CSVCorrectionsParser();
         var url = new File("test/util/GoogleSheetsCorrectionsTest.txt").toURI().toURL();
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var configurator = new GoogleSheetsCorrectionsConfigurator(url, parser, new TestBiasDetector(true), createTextTokenizer());
 
         var corrector = configurator.createCorrector(randomizer);

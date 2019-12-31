@@ -16,7 +16,7 @@ public class MapBackedBiasCorrectorTests {
         var corrections = Map.of(
                 "trigger", Set.of("suggestion")
         );
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(true), createTextTokenizer());
 
         var suggestion = corrector.correct("trigger", locale);
@@ -29,7 +29,7 @@ public class MapBackedBiasCorrectorTests {
         var corrections = Map.of(
                 "trigger", Set.of("suggestion")
         );
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(), createTextTokenizer());
 
         var suggestion = corrector.correct("miss", locale);
@@ -43,7 +43,7 @@ public class MapBackedBiasCorrectorTests {
         var corrections = Map.of(
                 "trigger", suggestions
         );
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(true), createTextTokenizer());
 
         var suggestion = corrector.correct("trigger", locale);
@@ -59,7 +59,7 @@ public class MapBackedBiasCorrectorTests {
         var corrections = Map.of(
                 "trigger", Set.of("suggestion", "suggestion-two")
         );
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(), createTextTokenizer());
 
         var suggestion = corrector.correct("trigger", Locale.JAPANESE);
@@ -72,7 +72,7 @@ public class MapBackedBiasCorrectorTests {
         var corrections = Map.of(
                 "trigger", Set.of("suggestion", "suggestion-two")
         );
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(true), createTextTokenizer());
 
         var suggestion = corrector.correct("trigger", Locale.US);
@@ -85,7 +85,7 @@ public class MapBackedBiasCorrectorTests {
         var corrections = Map.of(
                 "trigger", Set.of("suggestion", "suggestion-two")
         );
-        var randomizer = new MonoatomicallyIncrementingRandomizer();
+        var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(), createTextTokenizer());
 
         var suggestion = corrector.correct("trigger", Locale.ENGLISH);
