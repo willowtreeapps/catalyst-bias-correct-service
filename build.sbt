@@ -3,7 +3,7 @@ enablePlugins(JavaAppPackaging)
 name := """bias-correct-service"""
 organization := "org.catalyst"
 
-version := sys.env.getOrElse("BUILD_NUMBER", "1.0-SNAPSHOT")
+version := sys.env.getOrElse("VERSION_NUMBER", "1.0-SNAPSHOT")
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
