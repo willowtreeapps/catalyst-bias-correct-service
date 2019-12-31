@@ -1,6 +1,6 @@
 package util;
 
-public class MonoatomicallyIncrementingRandomizer implements Randomizer {
+public class MonotonicallyIncrementingRandomizer implements Randomizer {
     @Override
     public int next() {
         return _value++;
