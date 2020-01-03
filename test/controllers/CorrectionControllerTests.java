@@ -1,5 +1,6 @@
 package controllers;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -94,5 +95,25 @@ public class CorrectionControllerTests extends WithApplication {
         assertEquals("", response.correction);
         assertEquals("", response.input);
         assertEquals("", response.context);
+    }
+
+    @Test@Ignore
+    public void testMultiWordTrigger() {
+        var json = Json.toJson(Map.of(
+                "context", "context-value",
+                "text", "she is key four"
+        ));
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(POST)
+                .uri("/correct")
+                .bodyJson(json);
+
+        Result result = route(app, request);
+        var body = contentAsBytes(result).toArray();
+        var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
+        assertEquals(OK, result.status());
+        assertEquals("she is value4", response.correction);
+        assertEquals("she is key four", response.input);
+        assertEquals("context-value", response.context);
     }
 }
