@@ -18,6 +18,7 @@ import static play.inject.Bindings.bind;
 import static play.test.Helpers.*;
 
 public class CorrectionControllerTests extends WithApplication {
+    private static final String CORRECT_URI = "/corrector/correct";
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
@@ -34,7 +35,7 @@ public class CorrectionControllerTests extends WithApplication {
         ));
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
-                .uri("/correct")
+                .uri(CORRECT_URI)
                 .bodyJson(json);
 
         Result result = route(app, request);
@@ -53,7 +54,7 @@ public class CorrectionControllerTests extends WithApplication {
         ));
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
-                .uri("/correct")
+                .uri(CORRECT_URI)
                 .bodyJson(json);
 
         Result result = route(app, request);
@@ -70,7 +71,7 @@ public class CorrectionControllerTests extends WithApplication {
         var json = Json.toJson(Map.of());
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
-                .uri("/correct")
+                .uri(CORRECT_URI)
                 .bodyJson(json);
 
         Result result = route(app, request);
@@ -86,7 +87,7 @@ public class CorrectionControllerTests extends WithApplication {
     public void testCorrectionWithNoBody() {
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
-                .uri("/correct");
+                .uri(CORRECT_URI);
 
         Result result = route(app, request);
         var body = contentAsBytes(result).toArray();
@@ -105,7 +106,7 @@ public class CorrectionControllerTests extends WithApplication {
         ));
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
-                .uri("/correct")
+                .uri(CORRECT_URI)
                 .bodyJson(json);
 
         Result result = route(app, request);

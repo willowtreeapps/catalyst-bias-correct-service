@@ -2,5 +2,5 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /                           controllers.HomeController.index
-POST    /correct                    controllers.CorrectionController.correct(request: Request)
+GET     /corrector              controllers.HomeController.index
+POST    /corrector/correct      controllers.CorrectionController.correct(request: Request)
