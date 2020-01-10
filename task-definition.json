@@ -1,0 +1,37 @@
+{
+  "executionRoleArn": "arn:aws:iam::***REMOVED***:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/catalyst-bias-correct-taskdef-dev",
+          "awslogs-region": "***REMOVED***",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "protocol": "tcp",
+          "containerPort": 9000
+        }
+      ],
+      "cpu": 0,
+      "secrets": [
+        {
+          "valueFrom": "arn:aws:secretsmanager:***REMOVED***:***REMOVED***:secret:catalyst-bias-correct-dev-LM2GNq",
+          "name": "PLAY_SECRET_KEY"
+        }
+      ],
+      "memory": 512,
+      "image": "***REMOVED***.dkr.ecr.***REMOVED***.amazonaws.com/bias-correct-service:latest",
+      "name": "bias-correct-image"
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::***REMOVED***:role/ecsTaskExecutionRole",
+  "family": "catalyst-bias-correct-taskdef-dev",
+  "requiresCompatibilities": [
+    "EC2"
+  ]
+}
