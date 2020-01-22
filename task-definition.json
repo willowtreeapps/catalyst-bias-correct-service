@@ -20,11 +20,11 @@
       "cpu": 0,
       "secrets": [
         {
-          "valueFrom": "arn:aws:secretsmanager:***REMOVED***:***REMOVED***:secret:catalyst-bias-correct-dev-LM2GNq",
+          "valueFrom": "arn:aws:ssm:***REMOVED***:***REMOVED***:parameter/PLAY_SECRET_KEY",
           "name": "PLAY_SECRET_KEY"
         }
       ],
-      "memory": 512,
+      "memoryReservation": 512,
       "image": "***REMOVED***.dkr.ecr.***REMOVED***.amazonaws.com/bias-correct-service:latest",
       "name": "bias-correct-image"
     }
