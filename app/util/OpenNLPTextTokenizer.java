@@ -4,6 +4,7 @@ import opennlp.tools.tokenize.Detokenizer;
 import opennlp.tools.tokenize.Tokenizer;
 
 import javax.inject.Inject;
+import java.util.Locale;
 
 public class OpenNLPTextTokenizer implements TextTokenizer {
     @Inject
@@ -13,9 +14,9 @@ public class OpenNLPTextTokenizer implements TextTokenizer {
     }
 
     @Override
-    public TextTokens tokenize(String input) {
+    public TextTokens tokenize(String input, Locale locale) {
         var tokens = _tokenizer.tokenize(input);
-        return new TextTokens(tokens);
+        return new TextTokens(input, tokens, locale);
     }
 
     @Override
