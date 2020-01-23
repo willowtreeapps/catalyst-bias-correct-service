@@ -3,6 +3,7 @@ package util;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -30,5 +31,23 @@ public class UtilityTests {
         var secondSuggestions = mapping.get("trigger2");
         assertEquals(1, secondSuggestions.size());
         assertEquals(secondSuggestions.iterator().next(), "suggestion2");
+    }
+
+    @Test
+    public void TestMultiWordMatching() {
+        var tokens = new TextTokens(new String[] { "a", "b", "c", "d", });
+        var match = "b c";
+        var result = Utility.findMatch(match, tokens, TestUtility.createTextTokenizer(), Locale.ENGLISH);
+        var pair = result.get();
+        assertEquals(1, pair.getValue0().intValue());
+        assertEquals(2, pair.getValue1().intValue());
+    }
+
+    @Test
+    public void TestMultiWordMisMatching() {
+        var tokens = new TextTokens(new String[] { "a", "b", "c", "d", });
+        var match = "b d";
+        var result = Utility.findMatch(match, tokens, TestUtility.createTextTokenizer(), Locale.ENGLISH);
+        assertTrue(result.isEmpty());
     }
 }
