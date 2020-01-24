@@ -29,7 +29,7 @@ public class Utility {
         }
 
         var firstNeedle = needleTokens[0];
-        int maxCount = haystackTokens.length > needleTokens.length ? haystackTokens.length : 0;
+        int maxCount = haystackTokens.length >= needleTokens.length ? haystackTokens.length : 0;
         var foundPrefix = false;
 
         var collator = Collator.getInstance(locale);
