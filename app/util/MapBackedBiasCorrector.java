@@ -1,9 +1,10 @@
 package util;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import org.javatuples.Pair;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.*;
+import java.util.stream.Stream;
 
 public class MapBackedBiasCorrector implements BiasCorrector {
     public MapBackedBiasCorrector(Map<Locale, Map<String, Set<String>>> correctionsByLocale,
@@ -28,21 +29,37 @@ public class MapBackedBiasCorrector implements BiasCorrector {
             return null;
         }
 
-        var correctedTokens = Arrays.stream(tokens.getTokens())
-                .map( token -> {
-                    var suggestions = corrections.get(token);
-                    if (suggestions == null) {
-                        return token;
-                    }
+        var matches = findTriggerWordsForCorrection(locale, tokens, corrections, _tokenizer);
+        var textTokens = new ArrayList(Arrays.asList(tokens.getTokens()));
 
-                    return suggestions.stream()
-                            .skip(_randomizer.next() % suggestions.size())
-                            .findFirst()
-                            .get();
-                } )
-                .toArray(String[]::new);
+        matches.forEach( match -> replaceTriggerWords(match, textTokens, corrections, _randomizer));
 
-        return _tokenizer.detokenize(new TextTokens(input, correctedTokens, locale));
+        var textTokenArray = (String[]) textTokens.toArray(new String[0]);
+        return _tokenizer.detokenize(new TextTokens(input, textTokenArray), locale);
+    }
+
+    private static void replaceTriggerWords(Pair<String, Optional<Pair<Integer, Integer>>> match, ArrayList textTokens, Map<String, Set<String>> corrections, Randomizer _randomizer) {
+        var trigger = match.getValue0();
+        var indexes = match.getValue1().get();
+        var suggestions = corrections.get(trigger);
+        var suggestion = suggestions.stream()
+                .skip(_randomizer.next() % suggestions.size())
+                .findFirst()
+                .get();
+        replace(suggestion, indexes.getValue0(), indexes.getValue1(), textTokens);
+    }
+
+    @NotNull
+    private static Stream<Pair<String, Optional<Pair<Integer, Integer>>>> findTriggerWordsForCorrection(Locale locale, TextTokens tokens, Map<String, Set<String>> corrections, TextTokenizer _tokenizer) {
+        return corrections.keySet()
+                    .stream()
+                    .map( trigger -> Pair.with(trigger, Utility.findMatch(trigger, tokens, _tokenizer, locale)) )
+                    .filter( pairOfTriggerAndMatch -> pairOfTriggerAndMatch.getValue1().isPresent() );
+    }
+
+    private static void replace(String replacement, int startIndex, int endIndex, ArrayList<String> tokens) {
+        tokens.subList(startIndex, endIndex + 1).clear();
+        tokens.add(startIndex, replacement);
     }
 
     private Map<String, Set<String>> getCorrectionsByLocaleOrLessSpecificVariant(Locale locale) {
