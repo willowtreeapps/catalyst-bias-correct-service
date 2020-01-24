@@ -29,11 +29,18 @@ public class MapBackedBiasCorrector implements BiasCorrector {
             return null;
         }
 
+        // This algorithm matches trigger phrases that have multiple terms by an inverse search.
+        // Instead of iterating through the tokens once and seeing what is in a Set of words,
+        // we iterate through all of our triggers and perform a linear search through the tokenized
+        // input.  This results in a pessimal algorithm that requires multiple passes through the data.
+        // We may consider an optimization in which we implement two algorithms.  One would be optimized
+        // for the most common case of single-word phrases.  That could iterate through the entire input
+        // once and perform a lookup on every word.  We would need to normalize the tokens and corrections
+        // so that we can perform a proper language-aware lookup.  The second pass would just operate on
+        // the multi-word triggers and would iterate through the string using this algorithm.
         var matches = findTriggerWordsForCorrection(locale, tokens, corrections, _tokenizer);
         var textTokens = new ArrayList(Arrays.asList(tokens.getTokens()));
-
         matches.forEach( match -> replaceTriggerWords(match, textTokens, corrections, _randomizer));
-
         var textTokenArray = (String[]) textTokens.toArray(new String[0]);
         return _tokenizer.detokenize(new TextTokens(input, textTokenArray), locale);
     }
