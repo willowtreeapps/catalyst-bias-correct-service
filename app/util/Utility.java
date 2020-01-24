@@ -21,7 +21,7 @@ public class Utility {
             return result;
         }
 
-        var needleTokens = tokenizer.tokenize(needle).getTokens();
+        var needleTokens = tokenizer.tokenize(needle, locale).getTokens();
         var haystackTokens = haystack.getTokens();
 
         if (null == needleTokens || needleTokens.length == 0) {

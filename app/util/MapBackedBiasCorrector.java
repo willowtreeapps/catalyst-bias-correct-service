@@ -42,7 +42,7 @@ public class MapBackedBiasCorrector implements BiasCorrector {
         var textTokens = new ArrayList(Arrays.asList(tokens.getTokens()));
         matches.forEach( match -> replaceTriggerWords(match, textTokens, corrections, _randomizer));
         var textTokenArray = (String[]) textTokens.toArray(new String[0]);
-        return _tokenizer.detokenize(new TextTokens(input, textTokenArray), locale);
+        return _tokenizer.detokenize(new TextTokens(input, textTokenArray, locale));
     }
 
     private static void replaceTriggerWords(Pair<String, Optional<Pair<Integer, Integer>>> match, ArrayList textTokens, Map<String, Set<String>> corrections, Randomizer _randomizer) {

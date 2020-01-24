@@ -35,7 +35,7 @@ public class UtilityTests {
 
     @Test
     public void TestMultiWordMatching() {
-        var tokens = new TextTokens(new String[] { "a", "b", "c", "d", });
+        var tokens = new TextTokens("a b c d", new String[] { "a", "b", "c", "d", }, Locale.ENGLISH);
         var match = "b c";
         var result = Utility.findMatch(match, tokens, TestUtility.createTextTokenizer(), Locale.ENGLISH);
         var pair = result.get();
@@ -45,7 +45,7 @@ public class UtilityTests {
 
     @Test
     public void TestMultiWordMisMatching() {
-        var tokens = new TextTokens(new String[] { "a", "b", "c", "d", });
+        var tokens = new TextTokens("a b c d", new String[] { "a", "b", "c", "d", }, Locale.ENGLISH);
         var match = "b d";
         var result = Utility.findMatch(match, tokens, TestUtility.createTextTokenizer(), Locale.ENGLISH);
         assertTrue(result.isEmpty());
