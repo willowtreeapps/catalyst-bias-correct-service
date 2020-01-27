@@ -1,6 +1,5 @@
 package controllers;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import play.Application;
 import play.inject.guice.GuiceApplicationBuilder;
@@ -98,7 +97,7 @@ public class CorrectionControllerTests extends WithApplication {
         assertEquals("", response.context);
     }
 
-    @Test@Ignore
+    @Test
     public void testMultiWordTrigger() {
         var json = Json.toJson(Map.of(
                 "context", "context-value",
