@@ -2,11 +2,16 @@ package util;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class EnglishFemalePronounBiasDetector implements BiasDetector {
     @Override
     public boolean isBiasDetected(TextTokens input) {
-        var words = new HashSet(Arrays.asList(input.getTokens()));
+        var lowercaseTokens = Arrays.stream(input.getTokens())
+                .map(token -> token.toLowerCase(Locale.ENGLISH))
+                .collect(Collectors.toList());
+        var words = new HashSet(lowercaseTokens);
         return words.contains("she")
                 || words.contains("her")
                 || words.contains("she's")

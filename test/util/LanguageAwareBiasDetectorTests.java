@@ -15,6 +15,12 @@ public class LanguageAwareBiasDetectorTests {
     }
 
     @Test
+    public void TestEnglishBiasDetectionHitWithCapitalization() {
+        var tokens = new TextTokens("She is vain", new String[] { "She", "is", "vain" }, Locale.ENGLISH);
+        assertTrue(CreateDetector().isBiasDetected(tokens));
+    }
+
+    @Test
     public void TestEnglishBiasDetectionMiss() {
         var tokens = new TextTokens("he is good", new String[] { "he", "is", "good" }, Locale.ENGLISH);
         assertFalse(CreateDetector().isBiasDetected(tokens));
@@ -23,6 +29,12 @@ public class LanguageAwareBiasDetectorTests {
     @Test
     public void TestSpanishBiasDetectionHit() {
         var tokens = new TextTokens("ella es sentimental", new String[] { "ella", "es", "sentimental" }, new Locale("es"));
+        assertTrue(CreateDetector().isBiasDetected(tokens));
+    }
+
+    @Test
+    public void TestSpanishBiasDetectionHitWithCapitalization() {
+        var tokens = new TextTokens("Ella es sentimental", new String[] { "Ella", "es", "sentimental" }, new Locale("es"));
         assertTrue(CreateDetector().isBiasDetected(tokens));
     }
 
