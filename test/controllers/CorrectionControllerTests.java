@@ -21,7 +21,7 @@ public class CorrectionControllerTests extends WithApplication {
     @Override
     protected Application provideApplication() {
         return new GuiceApplicationBuilder()
-                .configure("google_sheets_configuration_url", "test/util/GoogleSheetsCorrectionsTest.txt")
+                .configure("google_sheets_configuration_url", "test/files/lang_redirect.txt")
                 .overrides(bind(Randomizer.class).to(MonotonicallyIncrementingRandomizer.class))
                 .build();
     }
@@ -30,7 +30,7 @@ public class CorrectionControllerTests extends WithApplication {
     public void testSimpleCorrection() {
         var json = Json.toJson(Map.of(
                 "context", "context-value",
-                "text", "she is keyone"
+                "text", "she is pushy"
         ));
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
@@ -41,15 +41,15 @@ public class CorrectionControllerTests extends WithApplication {
         var body = contentAsBytes(result).toArray();
         var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
         assertEquals(OK, result.status());
-        assertEquals("she is value1", response.correction);
-        assertEquals("she is keyone", response.input);
+        assertEquals("she is persuasive", response.correction);
+        assertEquals("she is pushy", response.input);
         assertEquals("context-value", response.context);
     }
 
     @Test
     public void testCorrectionWithoutContext() {
         var json = Json.toJson(Map.of(
-                "text", "she is keyone"
+                "text", "she is pushy"
         ));
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
@@ -60,8 +60,8 @@ public class CorrectionControllerTests extends WithApplication {
         var body = contentAsBytes(result).toArray();
         var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
         assertEquals(OK, result.status());
-        assertEquals("she is value1", response.correction);
-        assertEquals("she is keyone", response.input);
+        assertEquals("she is persuasive", response.correction);
+        assertEquals("she is pushy", response.input);
         assertEquals("", response.context);
     }
 
@@ -101,7 +101,7 @@ public class CorrectionControllerTests extends WithApplication {
     public void testMultiWordTrigger() {
         var json = Json.toJson(Map.of(
                 "context", "context-value",
-                "text", "she is key four"
+                "text", "she is a bitch"
         ));
         Http.RequestBuilder request = new Http.RequestBuilder()
                 .method(POST)
@@ -112,8 +112,28 @@ public class CorrectionControllerTests extends WithApplication {
         var body = contentAsBytes(result).toArray();
         var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
         assertEquals(OK, result.status());
-        assertEquals("she is value4", response.correction);
-        assertEquals("she is key four", response.input);
+        assertEquals("she is a boss", response.correction);
+        assertEquals("she is a bitch", response.input);
+        assertEquals("context-value", response.context);
+    }
+
+    @Test
+    public void testCapitalizedPronoun() {
+        var json = Json.toJson(Map.of(
+                "context", "context-value",
+                "text", "She is cold"
+        ));
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(POST)
+                .uri(CORRECT_URI)
+                .bodyJson(json);
+
+        Result result = route(app, request);
+        var body = contentAsBytes(result).toArray();
+        var response= Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
+        assertEquals(OK, result.status());
+        assertEquals("She is focused", response.correction);
+        assertEquals("She is cold", response.input);
         assertEquals("context-value", response.context);
     }
 }
