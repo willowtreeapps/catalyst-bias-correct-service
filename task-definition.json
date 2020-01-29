@@ -1,12 +1,12 @@
 {
-  "executionRoleArn": "arn:aws:iam::***REMOVED***:role/ecsTaskExecutionRole",
+  "executionRoleArn": "arn:aws:iam::<aws-account-id>:role/ecsTaskExecutionRole",
   "containerDefinitions": [
     {
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/catalyst-bias-correct-taskdef-dev",
-          "awslogs-region": "***REMOVED***",
+          "awslogs-group": "/ecs/catalyst-bias-correct-taskdef-<environment>",
+          "awslogs-region": "<aws-region>",
           "awslogs-stream-prefix": "ecs"
         }
       },
@@ -20,17 +20,17 @@
       "cpu": 0,
       "secrets": [
         {
-          "valueFrom": "arn:aws:ssm:***REMOVED***:***REMOVED***:parameter/PLAY_SECRET_KEY",
+          "valueFrom": "arn:aws:ssm:<aws-region>:<aws-account-id>:parameter/PLAY_SECRET_KEY",
           "name": "PLAY_SECRET_KEY"
         }
       ],
       "memoryReservation": 512,
-      "image": "***REMOVED***.dkr.ecr.***REMOVED***.amazonaws.com/bias-correct-service:latest",
+      "image": "<aws-account-id>.dkr.ecr.<aws-region>.amazonaws.com/bias-correct-service:latest",
       "name": "bias-correct-image"
     }
   ],
-  "taskRoleArn": "arn:aws:iam::***REMOVED***:role/ecsTaskExecutionRole",
-  "family": "catalyst-bias-correct-taskdef-dev",
+  "taskRoleArn": "arn:aws:iam::<aws-account-id>:role/ecsTaskExecutionRole",
+  "family": "catalyst-bias-correct-taskdef-<environment>",
   "requiresCompatibilities": [
     "EC2"
   ]
