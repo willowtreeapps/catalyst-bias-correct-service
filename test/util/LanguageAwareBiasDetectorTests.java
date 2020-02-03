@@ -2,64 +2,55 @@ package util;
 
 import org.junit.Test;
 
-import java.util.Locale;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LanguageAwareBiasDetectorTests {
     @Test
     public void TestEnglishBiasDetectionHit() {
-        var tokens = new TextTokens("she is vain", new String[] { "she", "is", "vain" }, Locale.ENGLISH);
+        var tokens = new TextTokens("she is vain", new String[] { "she", "is", "vain" });
         assertTrue(CreateDetector().isBiasDetected(tokens));
     }
 
     @Test
     public void TestEnglishBiasDetectionHitWithCapitalization() {
-        var tokens = new TextTokens("She is vain", new String[] { "She", "is", "vain" }, Locale.ENGLISH);
+        var tokens = new TextTokens("She is vain", new String[] { "She", "is", "vain" });
         assertTrue(CreateDetector().isBiasDetected(tokens));
     }
 
     @Test
     public void TestEnglishBiasDetectionMiss() {
-        var tokens = new TextTokens("he is good", new String[] { "he", "is", "good" }, Locale.ENGLISH);
+        var tokens = new TextTokens("he is good", new String[] { "he", "is", "good" });
         assertFalse(CreateDetector().isBiasDetected(tokens));
     }
 
     @Test
     public void TestSpanishBiasDetectionHit() {
-        var tokens = new TextTokens("ella es sentimental", new String[] { "ella", "es", "sentimental" }, new Locale("es"));
+        var tokens = new TextTokens("ella es sentimental", new String[] { "ella", "es", "sentimental" });
         assertTrue(CreateDetector().isBiasDetected(tokens));
     }
 
     @Test
     public void TestSpanishBiasDetectionHitWithCapitalization() {
-        var tokens = new TextTokens("Ella es sentimental", new String[] { "Ella", "es", "sentimental" }, new Locale("es"));
+        var tokens = new TextTokens("Ella es sentimental", new String[] { "Ella", "es", "sentimental" });
         assertTrue(CreateDetector().isBiasDetected(tokens));
     }
 
     @Test
     public void TestSpanishBiasDetectionMiss() {
-        var tokens = new TextTokens("el es apasionada", new String[] { "el", "es", "apasionada" }, new Locale("es"));
+        var tokens = new TextTokens("el es apasionada", new String[] { "el", "es", "apasionada" });
         assertFalse(CreateDetector().isBiasDetected(tokens));
     }
 
     @Test
-    public void TestBiasDetectionWithoutLocale() {
-        var tokens = new TextTokens("she is good", new String[] { "she", "is", "good" }, null);
-        assertFalse(CreateDetector().isBiasDetected(tokens));
+    public void TestBiasDetectionEnglishLocale() {
+        var tokens = new TextTokens("she is vain", new String[] { "she", "is", "vain" });
+        assertEquals(BiasCorrectLocale.ENGLISH, CreateDetector().getBiasDetectedLocale(tokens));
     }
 
     @Test
-    public void TestBiasDetectionWithMismatchedLocale() {
-        var tokens = new TextTokens("she is good", new String[] { "she", "is", "good" }, new Locale("es"));
-        assertFalse(CreateDetector().isBiasDetected(tokens));
-    }
-
-    @Test
-    public void TestBiasDetectionWithFullySpecifiedLocale() {
-        var tokens = new TextTokens("she is vain", new String[] { "she", "is", "vain" }, new Locale("en", "US"));
-        assertTrue(CreateDetector().isBiasDetected(tokens));
+    public void TestBiasDetectionSpanishLocale() {
+        var tokens = new TextTokens("Ella es sentimental", new String[] { "Ella", "es", "sentimental" });
+        assertEquals(BiasCorrectLocale.SPANISH, CreateDetector().getBiasDetectedLocale(tokens));
     }
 
     private static LanguageAwareBiasDetector CreateDetector() {

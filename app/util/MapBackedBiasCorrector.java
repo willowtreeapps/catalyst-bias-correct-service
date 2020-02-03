@@ -1,8 +1,8 @@
 package util;
 
 import org.javatuples.Pair;
-import org.jetbrains.annotations.NotNull;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -18,9 +18,10 @@ public class MapBackedBiasCorrector implements BiasCorrector {
     }
 
     @Override
-    public String correct(String input, Locale locale) {
-        var tokens = _tokenizer.tokenize(input, locale);
-        if (! _detector.isBiasDetected(tokens)) {
+    public String correct(String input) {
+        var tokens = _tokenizer.tokenize(input);
+        var locale = _detector.getBiasDetectedLocale(tokens);
+        if (locale == null) {
             return null;
         }
 
@@ -42,7 +43,7 @@ public class MapBackedBiasCorrector implements BiasCorrector {
         var textTokens = new ArrayList(Arrays.asList(tokens.getTokens()));
         matches.forEach( match -> replaceTriggerWords(match, textTokens, corrections, _randomizer));
         var textTokenArray = (String[]) textTokens.toArray(new String[0]);
-        return _tokenizer.detokenize(new TextTokens(input, textTokenArray, locale));
+        return _tokenizer.detokenize(new TextTokens(input, textTokenArray));
     }
 
     private static void replaceTriggerWords(Pair<String, Optional<Pair<Integer, Integer>>> match, ArrayList textTokens, Map<String, Set<String>> corrections, Randomizer _randomizer) {
@@ -71,7 +72,7 @@ public class MapBackedBiasCorrector implements BiasCorrector {
 
     private Map<String, Set<String>> getCorrectionsByLocaleOrLessSpecificVariant(Locale locale) {
         if (locale == null) {
-            locale = Locale.ENGLISH;
+            locale = BiasCorrectLocale.ENGLISH;
         }
 
         var corrections = _correctionsByLocale.get(locale);

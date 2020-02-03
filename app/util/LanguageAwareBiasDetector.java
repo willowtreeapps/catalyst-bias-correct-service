@@ -11,22 +11,24 @@ public class LanguageAwareBiasDetector implements BiasDetector {
     @Inject
     public LanguageAwareBiasDetector(EnglishFemalePronounBiasDetector englishPronounDetector, SpanishFemalePronounBiasDetector spanishPronounDetector) {
         m_detectorMap = Map.of(
-                Locale.ENGLISH, englishPronounDetector,
-                new Locale("es"), spanishPronounDetector
+                BiasCorrectLocale.ENGLISH, englishPronounDetector,
+                BiasCorrectLocale.SPANISH, spanishPronounDetector
         );
     }
 
     @Override
     public boolean isBiasDetected(TextTokens input) {
-        var locale = input.getLocale();
-        if (locale == null) {
-            return false;
-        }
-        var detector = m_detectorMap.get(locale);
-        if (detector == null && locale.getCountry() != null && !locale.getCountry().isEmpty()) {
-            var languageLocale = new Locale(locale.getLanguage());
-            detector = m_detectorMap.get(languageLocale);
-        }
-        return detector == null ? false : detector.isBiasDetected(input);
+        return getBiasDetectedLocale(input) != null;
+    }
+
+    @Override
+    public Locale getBiasDetectedLocale(TextTokens input) {
+        // if input matches any pronouns, return the first locale found
+        var locale = m_detectorMap
+                .entrySet()
+                .parallelStream()
+                .filter( x -> x.getValue().isBiasDetected(input))
+                .findFirst();
+        return locale.isEmpty() ? null : locale.get().getKey();
     }
 }

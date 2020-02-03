@@ -1,5 +1,7 @@
 package util;
 
+import java.util.Locale;
+
 public class TestBiasDetector implements BiasDetector {
     public TestBiasDetector() {
         this(false);
@@ -9,13 +11,12 @@ public class TestBiasDetector implements BiasDetector {
         _isBiasDetected = value;
     }
 
-    public void setBiasDetected(boolean value) {
-        _isBiasDetected = value;
-    }
+    @Override
+    public boolean isBiasDetected(TextTokens input) { return _isBiasDetected; }
 
     @Override
-    public boolean isBiasDetected(TextTokens input) {
-        return _isBiasDetected;
+    public Locale getBiasDetectedLocale(TextTokens input) {
+        return _isBiasDetected ? BiasCorrectLocale.ENGLISH : null;
     }
 
     private boolean _isBiasDetected;

@@ -9,7 +9,7 @@ public class EnglishFemalePronounBiasDetector implements BiasDetector {
     @Override
     public boolean isBiasDetected(TextTokens input) {
         var lowercaseTokens = Arrays.stream(input.getTokens())
-                .map(token -> token.toLowerCase(Locale.ENGLISH))
+                .map(token -> token.toLowerCase(BiasCorrectLocale.ENGLISH))
                 .collect(Collectors.toList());
         var words = new HashSet(lowercaseTokens);
         return words.contains("she")
@@ -18,5 +18,10 @@ public class EnglishFemalePronounBiasDetector implements BiasDetector {
                 || words.contains("she'll")
                 || words.contains("her's")
                 || words.contains("hers");
+    }
+
+    @Override
+    public Locale getBiasDetectedLocale(TextTokens input) {
+        return isBiasDetected(input) ? BiasCorrectLocale.ENGLISH : null;
     }
 }

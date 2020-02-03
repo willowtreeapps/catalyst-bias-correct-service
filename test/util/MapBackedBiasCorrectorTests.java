@@ -12,33 +12,33 @@ import static util.TestUtility.createTextTokenizer;
 public class MapBackedBiasCorrectorTests {
     @Test
     public void TestSimpleFetch() {
-        var locale = Locale.ENGLISH;
+        var locale = BiasCorrectLocale.ENGLISH;
         var corrections = Map.of(
                 "trigger", Set.of("suggestion")
         );
         var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(true), createTextTokenizer());
 
-        var suggestion = corrector.correct("trigger", locale);
+        var suggestion = corrector.correct("trigger");
         assertEquals("suggestion", suggestion);
     }
 
     @Test
     public void TestSuggestionMiss() {
-        var locale = Locale.ENGLISH;
+        var locale = BiasCorrectLocale.ENGLISH;
         var corrections = Map.of(
                 "trigger", Set.of("suggestion")
         );
         var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(), createTextTokenizer());
 
-        var suggestion = corrector.correct("miss", locale);
+        var suggestion = corrector.correct("miss");
         assertNull(suggestion);
     }
 
     @Test
     public void TestSuggestionRandomization() {
-        var locale = Locale.ENGLISH;
+        var locale = BiasCorrectLocale.ENGLISH;
         var suggestions = Set.of("suggestion", "suggestion-two");
         var corrections = Map.of(
                 "trigger", suggestions
@@ -46,36 +46,36 @@ public class MapBackedBiasCorrectorTests {
         var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(true), createTextTokenizer());
 
-        var suggestion = corrector.correct("trigger", locale);
+        var suggestion = corrector.correct("trigger");
         assertTrue(suggestions.contains(suggestion));
 
-        var secondSuggestion = corrector.correct("trigger", locale);
+        var secondSuggestion = corrector.correct("trigger");
         assertTrue(suggestions.contains(secondSuggestion) && secondSuggestion != suggestion);
     }
 
     @Test
     public void TestLocaleMiss() {
-        var locale = Locale.ENGLISH;
+        var locale = BiasCorrectLocale.ENGLISH;
         var corrections = Map.of(
                 "trigger", Set.of("suggestion", "suggestion-two")
         );
         var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(), createTextTokenizer());
 
-        var suggestion = corrector.correct("trigger", Locale.JAPANESE);
+        var suggestion = corrector.correct("trigger");
         assertNull(suggestion);
     }
 
     @Test
     public void TestRequestingAMoreSpecificLocale() {
-        var locale = Locale.ENGLISH;
+        var locale = BiasCorrectLocale.ENGLISH;
         var corrections = Map.of(
                 "trigger", Set.of("suggestion", "suggestion-two")
         );
         var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(true), createTextTokenizer());
 
-        var suggestion = corrector.correct("trigger", Locale.US);
+        var suggestion = corrector.correct("trigger");
         assertNotNull(suggestion);
     }
 
@@ -88,7 +88,7 @@ public class MapBackedBiasCorrectorTests {
         var randomizer = new MonotonicallyIncrementingRandomizer();
         var corrector = new MapBackedBiasCorrector(Map.of(locale, corrections), randomizer, new TestBiasDetector(), createTextTokenizer());
 
-        var suggestion = corrector.correct("trigger", Locale.ENGLISH);
+        var suggestion = corrector.correct("trigger");
         assertNull(suggestion);
     }
 }

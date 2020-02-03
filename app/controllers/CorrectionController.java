@@ -5,12 +5,9 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import util.BiasCorrector;
-import util.LanguageDetectionConfidence;
-import util.LanguageDetector;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.Locale;
 
 public class CorrectionController extends Controller {
     public static class CorrectResponse {
@@ -20,20 +17,15 @@ public class CorrectionController extends Controller {
     }
 
     @Inject
-    public CorrectionController(BiasCorrector corrector, LanguageDetector languageDetector) {
+    public CorrectionController(BiasCorrector corrector) {
         _biasCorrector = corrector;
-        _languageDetector = languageDetector;
     }
 
     public Result correct(Http.Request request) {
         var textToCorrect = getString(request, TextFieldName);
         var context = getString(request, ContextFieldName);
-        var languageDetection = _languageDetector.detect(textToCorrect);
-        var locale = languageDetection.getConfidence() == LanguageDetectionConfidence.HIGH
-                ? new Locale(languageDetection.getLanguage())
-                : null;
 
-        var correction = _biasCorrector.correct(textToCorrect, locale);
+        var correction = _biasCorrector.correct(textToCorrect);
 
         var response = new CorrectResponse();
         response.context = context;
@@ -56,7 +48,6 @@ public class CorrectionController extends Controller {
     }
 
     private BiasCorrector _biasCorrector;
-    private LanguageDetector _languageDetector;
 
     private static String TextFieldName = "text";
     private static String ContextFieldName = "context";

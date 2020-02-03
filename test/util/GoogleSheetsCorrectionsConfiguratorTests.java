@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Locale;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -21,11 +20,10 @@ public class GoogleSheetsCorrectionsConfiguratorTests {
         var corrector = configurator.createCorrector(randomizer);
         assertNotNull(corrector);
 
-        var locale = new Locale("en");
-        var suggestion = corrector.correct("keyone", locale);
+        var suggestion = corrector.correct("keyone");
         assertEquals("value1", suggestion);
 
-        var suggestionTwo = corrector.correct("keyone", locale);
+        var suggestionTwo = corrector.correct("keyone");
         assertEquals("value3", suggestionTwo);
     }
 }

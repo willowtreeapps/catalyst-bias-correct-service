@@ -9,11 +9,15 @@ public class SpanishFemalePronounBiasDetector implements BiasDetector {
     @Override
     public boolean isBiasDetected(TextTokens input) {
         var lowercaseTokens = Arrays.stream(input.getTokens())
-                .map(token -> token.toLowerCase(SpanishLocale))
+                .map(token -> token.toLowerCase(BiasCorrectLocale.SPANISH))
                 .collect(Collectors.toList());
         var words = new HashSet(lowercaseTokens);
         return words.contains("ella");
     }
 
-    private static Locale SpanishLocale = new Locale("es");
+    @Override
+    public Locale getBiasDetectedLocale(TextTokens input) {
+        return isBiasDetected(input) ? BiasCorrectLocale.SPANISH : null;
+    }
+
 }
