@@ -15,7 +15,9 @@ libraryDependencies ++= Seq(
   "org.apache.opennlp" % "opennlp-tools" % "1.9.1",
   "org.javatuples" % "javatuples" % "1.2",
   "io.kamon" %% "kamon-bundle" % "2.0.4",
-  "io.kamon" %% "kamon-prometheus" % "2.0.0"
+  "io.kamon" %% "kamon-prometheus" % "2.0.0",
+  "com.opencsv" % "opencsv" % "5.0",
+  "org.assertj" % "assertj-core" % "3.15.0"
 )
 
 // Docker settings
