@@ -9,10 +9,15 @@ public class LanguageAwareBiasDetector implements BiasDetector {
     private final Map<Locale, BiasDetector> m_detectorMap;
 
     @Inject
-    public LanguageAwareBiasDetector(EnglishFemalePronounBiasDetector englishPronounDetector, SpanishFemalePronounBiasDetector spanishPronounDetector) {
+    public LanguageAwareBiasDetector(EnglishFemalePronounBiasDetector englishPronounDetector,
+                                     SpanishFemalePronounBiasDetector spanishPronounDetector,
+                                     FrenchFemalePronounBiasDetector frenchPronounDetector,
+                                     GermanFemalePronounBiasDetector germanPronounDetector) {
         m_detectorMap = Map.of(
                 BiasCorrectLocale.ENGLISH, englishPronounDetector,
-                BiasCorrectLocale.SPANISH, spanishPronounDetector
+                BiasCorrectLocale.SPANISH, spanishPronounDetector,
+                BiasCorrectLocale.FRENCH, frenchPronounDetector,
+                BiasCorrectLocale.GERMAN, germanPronounDetector
         );
     }
 
