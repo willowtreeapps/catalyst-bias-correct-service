@@ -146,8 +146,7 @@ public class CorrectionControllerTests extends WithApplication {
 
     @Test
     public void testSimpleEnglishCorrections() {
-        try {
-            CSVReader reader = new CSVReader(new FileReader("test/files/en.csv"));
+        try (CSVReader reader = new CSVReader(new FileReader("test/files/en.csv"))) {
 
             String[] nextLine;
             int rowNumber = 0;
@@ -181,8 +180,7 @@ public class CorrectionControllerTests extends WithApplication {
 
     @Test
     public void testSimpleSpanishCorrections() {
-        try {
-            CSVReader reader = new CSVReader(new FileReader("test/files/es.csv"));
+        try (CSVReader reader = new CSVReader(new FileReader("test/files/es.csv"))) {
 
             String[] nextLine;
             int rowNumber = 0;
@@ -206,6 +204,74 @@ public class CorrectionControllerTests extends WithApplication {
                 assertEquals(OK, result.status());
                 soft.assertThat(response.correction).isEqualTo("ella es " + biasCorrection);
                 assertEquals("ella es " + userInput, response.input);
+                assertEquals("context-value", response.context);
+            }
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace();
+        }
+        soft.assertAll();
+    }
+
+    @Test
+    public void testSimpleFrenchCorrections() {
+        try (CSVReader reader = new CSVReader(new FileReader("test/files/fr.csv"))) {
+
+            String[] nextLine;
+            int rowNumber = 0;
+            while ((nextLine = reader.readNext()) != null) {
+                rowNumber++;
+                String userInput = nextLine[0];
+                String biasCorrection = nextLine[1];
+
+                var json = Json.toJson(Map.of(
+                        "context", "context-value",
+                        "text", "elle est " + userInput
+                ));
+                Http.RequestBuilder request = new Http.RequestBuilder()
+                        .method(POST)
+                        .uri(CORRECT_URI)
+                        .bodyJson(json);
+
+                Result result = route(app, request);
+                var body = contentAsBytes(result).toArray();
+                var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
+                assertEquals(OK, result.status());
+                soft.assertThat(response.correction).isEqualTo("elle est " + biasCorrection);
+                assertEquals("elle est " + userInput, response.input);
+                assertEquals("context-value", response.context);
+            }
+        } catch (IOException | CsvValidationException e) {
+            e.printStackTrace();
+        }
+        soft.assertAll();
+    }
+
+    @Test
+    public void testSimpleGermanCorrections() {
+        try (CSVReader reader = new CSVReader(new FileReader("test/files/de.csv"))) {
+
+            String[] nextLine;
+            int rowNumber = 0;
+            while ((nextLine = reader.readNext()) != null) {
+                rowNumber++;
+                String userInput = nextLine[0];
+                String biasCorrection = nextLine[1];
+
+                var json = Json.toJson(Map.of(
+                        "context", "context-value",
+                        "text", "ihre " + userInput
+                ));
+                Http.RequestBuilder request = new Http.RequestBuilder()
+                        .method(POST)
+                        .uri(CORRECT_URI)
+                        .bodyJson(json);
+
+                Result result = route(app, request);
+                var body = contentAsBytes(result).toArray();
+                var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
+                assertEquals(OK, result.status());
+                soft.assertThat(response.correction).isEqualTo("ihre " + biasCorrection);
+                assertEquals("ihre " + userInput, response.input);
                 assertEquals("context-value", response.context);
             }
         } catch (IOException | CsvValidationException e) {
