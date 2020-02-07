@@ -3,25 +3,18 @@ package util;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-public class EnglishFemalePronounBiasDetector implements BiasDetector {
+public class EnglishFemalePronounBiasDetector extends BiasDetector {
+    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("she", "her", "she's", "she'll", "her's", "hers"));
+
     @Override
-    public boolean isBiasDetected(TextTokens input) {
-        var lowercaseTokens = Arrays.stream(input.getTokens())
-                .map(token -> token.toLowerCase(BiasCorrectLocale.ENGLISH))
-                .collect(Collectors.toList());
-        var words = new HashSet(lowercaseTokens);
-        return words.contains("she")
-                || words.contains("her")
-                || words.contains("she's")
-                || words.contains("she'll")
-                || words.contains("her's")
-                || words.contains("hers");
+    Locale getLocale() {
+        return BiasCorrectLocale.ENGLISH;
     }
 
     @Override
-    public Locale getBiasDetectedLocale(TextTokens input) {
-        return isBiasDetected(input) ? BiasCorrectLocale.ENGLISH : null;
+    Set<String> getPronouns() {
+        return PRONOUNS;
     }
 }

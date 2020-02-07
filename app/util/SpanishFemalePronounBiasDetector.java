@@ -3,22 +3,18 @@ package util;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-public class SpanishFemalePronounBiasDetector implements BiasDetector {
+public class SpanishFemalePronounBiasDetector extends BiasDetector {
+    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("ella", "su"));
+
     @Override
-    public boolean isBiasDetected(TextTokens input) {
-        var lowercaseTokens = Arrays.stream(input.getTokens())
-                .map(token -> token.toLowerCase(BiasCorrectLocale.SPANISH))
-                .collect(Collectors.toList());
-        var words = new HashSet(lowercaseTokens);
-        return words.contains("ella")
-                || words.contains("su");
+    Locale getLocale() {
+        return BiasCorrectLocale.SPANISH;
     }
 
     @Override
-    public Locale getBiasDetectedLocale(TextTokens input) {
-        return isBiasDetected(input) ? BiasCorrectLocale.SPANISH : null;
+    Set<String> getPronouns() {
+        return PRONOUNS;
     }
-
 }

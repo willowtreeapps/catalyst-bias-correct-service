@@ -3,23 +3,18 @@ package util;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-public class GermanFemalePronounBiasDetector implements BiasDetector {
+public class GermanFemalePronounBiasDetector extends BiasDetector {
+    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("ihre", "ihrer", "ihres"));
+
     @Override
-    public boolean isBiasDetected(TextTokens input) {
-        var lowercaseTokens = Arrays.stream(input.getTokens())
-                .map(token -> token.toLowerCase(BiasCorrectLocale.GERMAN))
-                .collect(Collectors.toList());
-        var words = new HashSet(lowercaseTokens);
-        return words.contains("ihre")
-                || words.contains("ihrer")
-                || words.contains("ihres");
+    Locale getLocale() {
+        return BiasCorrectLocale.GERMAN;
     }
 
     @Override
-    public Locale getBiasDetectedLocale(TextTokens input) {
-        return isBiasDetected(input) ? BiasCorrectLocale.GERMAN : null;
+    Set<String> getPronouns() {
+        return PRONOUNS;
     }
-
 }

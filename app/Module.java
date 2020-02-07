@@ -1,5 +1,6 @@
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import opennlp.tools.tokenize.*;
 import util.*;
 
@@ -11,9 +12,6 @@ public class Module extends AbstractModule {
         bind(Randomizer.class).to(SimpleRandomizer.class);
 
         bind(BiasCorrector.class).toProvider(GoogleSheetsBackedBiasDetectorProvider.class).asEagerSingleton();
-
-        // Third-party
-        bind(Tokenizer.class).to(SimpleTokenizer.class).asEagerSingleton();
     }
 
     @Provides
@@ -32,5 +30,10 @@ public class Module extends AbstractModule {
         };
 
         return new DictionaryDetokenizer(new DetokenizationDictionary(tokens, operations));
+    }
+
+    @Provides @Singleton
+    private static Tokenizer createWhitespaceTokenizer() {
+        return WhitespaceTokenizer.INSTANCE;
     }
 }

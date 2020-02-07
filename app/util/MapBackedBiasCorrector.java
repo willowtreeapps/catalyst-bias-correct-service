@@ -4,7 +4,7 @@ import org.javatuples.Pair;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public class MapBackedBiasCorrector implements BiasCorrector {
     public MapBackedBiasCorrector(Map<Locale, Map<String, Set<String>>> correctionsByLocale,
@@ -40,6 +40,10 @@ public class MapBackedBiasCorrector implements BiasCorrector {
         // so that we can perform a proper language-aware lookup.  The second pass would just operate on
         // the multi-word triggers and would iterate through the string using this algorithm.
         var matches = findTriggerWordsForCorrection(locale, tokens, corrections, _tokenizer);
+        if (matches.isEmpty()) {
+            return "";
+        }
+
         var textTokens = new ArrayList(Arrays.asList(tokens.getTokens()));
         matches.forEach( match -> replaceTriggerWords(match, textTokens, corrections, _randomizer));
         var textTokenArray = (String[]) textTokens.toArray(new String[0]);
@@ -58,16 +62,18 @@ public class MapBackedBiasCorrector implements BiasCorrector {
     }
 
     @NotNull
-    private static Stream<Pair<String, Optional<Pair<Integer, Integer>>>> findTriggerWordsForCorrection(Locale locale, TextTokens tokens, Map<String, Set<String>> corrections, TextTokenizer _tokenizer) {
+    private static List<Pair<String, Optional<Pair<Integer, Integer>>>> findTriggerWordsForCorrection(Locale locale, TextTokens tokens, Map<String, Set<String>> corrections, TextTokenizer _tokenizer) {
         return corrections.keySet()
                     .stream()
                     .map( trigger -> Pair.with(trigger, Utility.findMatch(trigger, tokens, _tokenizer, locale)) )
-                    .filter( pairOfTriggerAndMatch -> pairOfTriggerAndMatch.getValue1().isPresent() );
+                    .filter( pairOfTriggerAndMatch -> pairOfTriggerAndMatch.getValue1().isPresent() ).collect(Collectors.toList());
     }
 
-    private static void replace(String replacement, int startIndex, int endIndex, ArrayList<String> tokens) {
+    private static void replace(String replacement, int startIndex, int endIndex, List<String> tokens) {
+        var newValue = RegexMatcher.getReplacementWithPrefixSuffix(startIndex, endIndex, replacement, tokens);
+
         tokens.subList(startIndex, endIndex + 1).clear();
-        tokens.add(startIndex, replacement);
+        tokens.add(startIndex, newValue);
     }
 
     private Map<String, Set<String>> getCorrectionsByLocaleOrLessSpecificVariant(Locale locale) {

@@ -2,10 +2,12 @@ package util;
 
 import com.google.inject.Inject;
 
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
-public class LanguageAwareBiasDetector implements BiasDetector {
+public class LanguageAwareBiasDetector extends BiasDetector {
     private final Map<Locale, BiasDetector> m_detectorMap;
 
     @Inject
@@ -35,5 +37,15 @@ public class LanguageAwareBiasDetector implements BiasDetector {
                 .filter( x -> x.getValue().isBiasDetected(input))
                 .findFirst();
         return locale.isEmpty() ? null : locale.get().getKey();
+    }
+
+    @Override
+    Locale getLocale() {
+        return BiasCorrectLocale.ENGLISH;
+    }
+
+    @Override
+    Set<String> getPronouns() {
+        return new HashSet<>();
     }
 }

@@ -14,15 +14,13 @@ public class CSVCorrectionsParser implements CorrectionsParser {
 
     @Override
     public List<Correction> parse(URL file) {
-        CSVParser parser;
-        try {
-            parser = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT);
+
+        try (CSVParser parser = CSVParser.parse(file, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
+            return Streams.stream(parser.iterator())
+                    .map( record -> new Correction(record.get(0), record.get(1)) )
+                    .collect(Collectors.toList());
         } catch (IOException e) {
             return null;
         }
-
-        return Streams.stream(parser.iterator())
-            .map( record -> new Correction(record.get(0), record.get(1)) )
-            .collect(Collectors.toList());
     }
 }

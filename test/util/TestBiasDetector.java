@@ -1,8 +1,10 @@
 package util;
 
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
-public class TestBiasDetector implements BiasDetector {
+public class TestBiasDetector extends BiasDetector {
     public TestBiasDetector() {
         this(false);
     }
@@ -17,6 +19,16 @@ public class TestBiasDetector implements BiasDetector {
     @Override
     public Locale getBiasDetectedLocale(TextTokens input) {
         return _isBiasDetected ? BiasCorrectLocale.ENGLISH : null;
+    }
+
+    @Override
+    Locale getLocale() {
+        return BiasCorrectLocale.ENGLISH;
+    }
+
+    @Override
+    Set<String> getPronouns() {
+        return new HashSet<>();
     }
 
     private boolean _isBiasDetected;

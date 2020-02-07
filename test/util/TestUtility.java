@@ -2,7 +2,7 @@ package util;
 
 import opennlp.tools.tokenize.DetokenizationDictionary;
 import opennlp.tools.tokenize.DictionaryDetokenizer;
-import opennlp.tools.tokenize.SimpleTokenizer;
+import opennlp.tools.tokenize.WhitespaceTokenizer;
 
 public class TestUtility {
     public static TextTokenizer createTextTokenizer() {
@@ -21,7 +21,7 @@ public class TestUtility {
 
         var detokenizer = new DictionaryDetokenizer(new DetokenizationDictionary(tokens, operations));
 
-        return new OpenNLPTextTokenizer(SimpleTokenizer.INSTANCE, detokenizer);
+        return new OpenNLPTextTokenizer(WhitespaceTokenizer.INSTANCE, detokenizer);
     }
 
     private TestUtility() {

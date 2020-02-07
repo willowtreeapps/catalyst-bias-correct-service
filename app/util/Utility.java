@@ -2,7 +2,6 @@ package util;
 
 import org.javatuples.Pair;
 
-import java.text.Collator;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -32,26 +31,33 @@ public class Utility {
         int maxCount = haystackTokens.length >= needleTokens.length ? haystackTokens.length : 0;
         var foundPrefix = false;
 
-        var collator = Collator.getInstance(locale);
-        collator.setStrength(Collator.FULL_DECOMPOSITION);
-
         for (var position = 0; position < maxCount && !foundPrefix; position++) {
             var haystackValue = haystackTokens[position];
 
-            if (0 != collator.compare(firstNeedle, haystackValue)) {
+            if (!RegexMatcher.matchesWithAnyPrefixSuffix(firstNeedle, haystackValue)) {
                 continue;
             }
 
             int haystackOffset = position;
             foundPrefix = IntStream
                     .range(0, needleTokens.length)
-                    .allMatch( index -> 0 == collator.compare(needleTokens[index], haystackTokens[haystackOffset + index]));
+                    .allMatch( index -> matchesPattern(index, needleTokens.length, needleTokens[index], haystackTokens[haystackOffset + index]));
 
             result = foundPrefix ? Optional.of(Pair.with(position, position + needleTokens.length - 1)) : Optional.empty();
         }
 
-
         return result;
+    }
+
+    private static boolean matchesPattern(int index, int tokenLength, String needle, String haystack) {
+
+        if (tokenLength > 1 && index == 0) {
+            return RegexMatcher.matchesWithAnyPrefix(needle, haystack);
+        } else if (tokenLength > 1 && index == tokenLength - 1) {
+            return RegexMatcher.matchesWithAnySuffix(needle, haystack);
+        }
+
+        return RegexMatcher.matchesWithAnyPrefixSuffix(needle, haystack);
     }
 
     private Utility() {}
