@@ -5,12 +5,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class RegexMatcher {
-    private static String WORD = "\\w*";
-    private static String NON_WORD = "(\\W*)";
+    private static String ANY_LETTER = "[\\p{L}\\p{M}]+";
+    private static String PUNCTUATION = "(\\p{P}*)";
     private static String CASE_INSENSITIVE_STRING = "((?i)%s)";
-    private static String WITHIN_SPECIAL_CHARS = NON_WORD + CASE_INSENSITIVE_STRING + NON_WORD;
-    private static String PREFIX_SPECIAL_CHARS = NON_WORD + CASE_INSENSITIVE_STRING;
-    private static String SUFFIX_SPECIAL_CHARS = CASE_INSENSITIVE_STRING + NON_WORD;
+    private static String WITHIN_SPECIAL_CHARS = PUNCTUATION + CASE_INSENSITIVE_STRING + PUNCTUATION;
+    private static String PREFIX_SPECIAL_CHARS = PUNCTUATION + CASE_INSENSITIVE_STRING;
+    private static String SUFFIX_SPECIAL_CHARS = CASE_INSENSITIVE_STRING + PUNCTUATION;
 
     public static boolean pronounMatchFound(Set<String> pronouns, Set<String> tokens) {
         return tokens
@@ -38,9 +38,9 @@ public class RegexMatcher {
         StringBuilder sb = new StringBuilder(replacement);
 
         if (startIndex != endIndex) {
-            var prefixPattern = Pattern.compile(String.format(PREFIX_SPECIAL_CHARS, WORD))
+            var prefixPattern = Pattern.compile(String.format(PREFIX_SPECIAL_CHARS, ANY_LETTER))
                     .matcher(tokens.get(startIndex));
-            var suffixPattern = Pattern.compile(String.format(SUFFIX_SPECIAL_CHARS, WORD))
+            var suffixPattern = Pattern.compile(String.format(SUFFIX_SPECIAL_CHARS, ANY_LETTER))
                     .matcher(tokens.get(endIndex));
 
             if (prefixPattern.matches()) {
@@ -50,7 +50,7 @@ public class RegexMatcher {
                 sb.append(suffixPattern.group(2));
             }
         } else {
-            var pattern = Pattern.compile(String.format(WITHIN_SPECIAL_CHARS, WORD))
+            var pattern = Pattern.compile(String.format(WITHIN_SPECIAL_CHARS, ANY_LETTER))
                     .matcher(tokens.get(startIndex));
             if (pattern.matches()) {
                 sb.insert(0, pattern.group(1)).append(pattern.group(3));
