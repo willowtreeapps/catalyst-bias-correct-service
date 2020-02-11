@@ -3,7 +3,6 @@ package util;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Locale;
 
 import static org.junit.Assert.*;
 
@@ -37,17 +36,29 @@ public class UtilityTests {
     public void TestMultiWordMatching() {
         var tokens = new TextTokens("a b c d", new String[] { "a", "b", "c", "d", });
         var match = "b c";
-        var result = Utility.findMatch(match, tokens, TestUtility.createTextTokenizer(), BiasCorrectLocale.ENGLISH);
-        var pair = result.get();
-        assertEquals(1, pair.getValue0().intValue());
-        assertEquals(2, pair.getValue1().intValue());
+        var result = Utility.findMatches(match, tokens, TestUtility.createTextTokenizer());
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(0).getStartIndex());
+        assertEquals(2, result.get(0).getEndIndex());
+    }
+
+    @Test
+    public void TestRepeatedMultiWordMatching() {
+        var tokens = new TextTokens("a b c d b c", new String[] { "a", "b", "c", "d", "b", "c"});
+        var match = "b c";
+        var result = Utility.findMatches(match, tokens, TestUtility.createTextTokenizer());
+        assertEquals(2, result.size());
+        assertEquals(1, result.get(0).getStartIndex());
+        assertEquals(2, result.get(0).getEndIndex());
+        assertEquals(4, result.get(1).getStartIndex());
+        assertEquals(5, result.get(1).getEndIndex());
     }
 
     @Test
     public void TestMultiWordMisMatching() {
         var tokens = new TextTokens("a b c d", new String[] { "a", "b", "c", "d", });
         var match = "b d";
-        var result = Utility.findMatch(match, tokens, TestUtility.createTextTokenizer(), BiasCorrectLocale.ENGLISH);
+        var result = Utility.findMatches(match, tokens, TestUtility.createTextTokenizer());
         assertTrue(result.isEmpty());
     }
 }

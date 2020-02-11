@@ -1,6 +1,6 @@
 package util;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public class TestBiasDetector extends BiasDetector {
 
     @Override
     Set<String> getPronouns() {
-        return new HashSet<>();
+        return Collections.emptySet();
     }
 
     private boolean _isBiasDetected;

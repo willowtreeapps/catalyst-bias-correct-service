@@ -1,7 +1,5 @@
 package util;
 
-import org.javatuples.Pair;
-
 import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +37,7 @@ public class MapBackedBiasCorrector implements BiasCorrector {
         // once and perform a lookup on every word.  We would need to normalize the tokens and corrections
         // so that we can perform a proper language-aware lookup.  The second pass would just operate on
         // the multi-word triggers and would iterate through the string using this algorithm.
-        var matches = findTriggerWordsForCorrection(locale, tokens, corrections, _tokenizer);
+        var matches = findTriggerWordsForCorrection(tokens, corrections, _tokenizer);
         if (matches.isEmpty()) {
             return "";
         }
@@ -50,23 +48,23 @@ public class MapBackedBiasCorrector implements BiasCorrector {
         return _tokenizer.detokenize(new TextTokens(input, textTokenArray));
     }
 
-    private static void replaceTriggerWords(Pair<String, Optional<Pair<Integer, Integer>>> match, ArrayList textTokens, Map<String, Set<String>> corrections, Randomizer _randomizer) {
-        var trigger = match.getValue0();
-        var indexes = match.getValue1().get();
-        var suggestions = corrections.get(trigger);
+    private static void replaceTriggerWords(Match match, ArrayList textTokens, Map<String, Set<String>> corrections, Randomizer _randomizer) {
+        var suggestions = corrections.get(match.getTrigger());
         var suggestion = suggestions.stream()
                 .skip(_randomizer.next() % suggestions.size())
                 .findFirst()
                 .get();
-        replace(suggestion, indexes.getValue0(), indexes.getValue1(), textTokens);
+        replace(suggestion, match.getStartIndex(), match.getEndIndex(), textTokens);
     }
 
     @NotNull
-    private static List<Pair<String, Optional<Pair<Integer, Integer>>>> findTriggerWordsForCorrection(Locale locale, TextTokens tokens, Map<String, Set<String>> corrections, TextTokenizer _tokenizer) {
+    private static List<Match> findTriggerWordsForCorrection(TextTokens tokens, Map<String, Set<String>> corrections, TextTokenizer _tokenizer) {
         return corrections.keySet()
                     .stream()
-                    .map( trigger -> Pair.with(trigger, Utility.findMatch(trigger, tokens, _tokenizer, locale)) )
-                    .filter( pairOfTriggerAndMatch -> pairOfTriggerAndMatch.getValue1().isPresent() ).collect(Collectors.toList());
+                    .flatMap( trigger -> Utility.findMatches(trigger, tokens, _tokenizer).stream())
+                    .sorted((o1, o2) -> o2.getStartIndex() - o1.getStartIndex()) // reverse order to replace last token first
+                    .collect(Collectors.toList());
+
     }
 
     private static void replace(String replacement, int startIndex, int endIndex, List<String> tokens) {

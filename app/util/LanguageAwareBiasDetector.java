@@ -2,10 +2,7 @@ package util;
 
 import com.google.inject.Inject;
 
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LanguageAwareBiasDetector extends BiasDetector {
     private final Map<Locale, BiasDetector> m_detectorMap;
@@ -46,6 +43,6 @@ public class LanguageAwareBiasDetector extends BiasDetector {
 
     @Override
     Set<String> getPronouns() {
-        return new HashSet<>();
+        return Collections.emptySet();
     }
 }
