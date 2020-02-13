@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 
 public class FrenchFemalePronounBiasDetector extends BiasDetector {
-    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("elle", "son", "sienne"));
+    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("elle", "son", "sienne", "sa"));
 
     @Override
     Locale getLocale() {
