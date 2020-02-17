@@ -21,17 +21,17 @@ public class LanguageAwareBiasDetector extends BiasDetector {
     }
 
     @Override
-    public boolean isBiasDetected(TextTokens input) {
-        return getBiasDetectedLocale(input) != null;
+    public boolean isBiasDetected(TextTokens input, TextTokenizer tokenizer) {
+        return getBiasDetectedLocale(input, tokenizer) != null;
     }
 
     @Override
-    public Locale getBiasDetectedLocale(TextTokens input) {
+    public Locale getBiasDetectedLocale(TextTokens input, TextTokenizer tokenizer) {
         // if input matches any pronouns, return the first locale found
         var locale = m_detectorMap
                 .entrySet()
                 .parallelStream()
-                .filter( x -> x.getValue().isBiasDetected(input))
+                .filter( x -> x.getValue().isBiasDetected(input, tokenizer))
                 .findFirst();
         return locale.isEmpty() ? null : locale.get().getKey();
     }

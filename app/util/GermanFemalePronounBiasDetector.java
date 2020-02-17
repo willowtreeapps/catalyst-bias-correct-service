@@ -6,7 +6,8 @@ import java.util.Locale;
 import java.util.Set;
 
 public class GermanFemalePronounBiasDetector extends BiasDetector {
-    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("ihre", "ihrer", "ihres"));
+    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList(
+            "ihr", "ihre", "sie ist", "sie wird", "sie hat", "sie hatte", "sie war"));
 
     @Override
     Locale getLocale() {

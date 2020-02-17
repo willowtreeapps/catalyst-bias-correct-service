@@ -18,7 +18,7 @@ public class MapBackedBiasCorrector implements BiasCorrector {
     @Override
     public String correct(String input) {
         var tokens = _tokenizer.tokenize(input);
-        var locale = _detector.getBiasDetectedLocale(tokens);
+        var locale = _detector.getBiasDetectedLocale(tokens, _tokenizer);
         if (locale == null) {
             return null;
         }

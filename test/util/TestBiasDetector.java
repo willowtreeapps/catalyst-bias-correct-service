@@ -14,10 +14,10 @@ public class TestBiasDetector extends BiasDetector {
     }
 
     @Override
-    public boolean isBiasDetected(TextTokens input) { return _isBiasDetected; }
+    public boolean isBiasDetected(TextTokens input, TextTokenizer tokenizer) { return _isBiasDetected; }
 
     @Override
-    public Locale getBiasDetectedLocale(TextTokens input) {
+    public Locale getBiasDetectedLocale(TextTokens input, TextTokenizer tokenizer) {
         return _isBiasDetected ? BiasCorrectLocale.ENGLISH : null;
     }
 

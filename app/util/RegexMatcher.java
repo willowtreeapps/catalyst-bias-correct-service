@@ -1,7 +1,6 @@
 package util;
 
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 public class RegexMatcher {
@@ -11,16 +10,6 @@ public class RegexMatcher {
     private static String WITHIN_SPECIAL_CHARS = PUNCTUATION + CASE_INSENSITIVE_STRING + PUNCTUATION;
     private static String PREFIX_SPECIAL_CHARS = PUNCTUATION + CASE_INSENSITIVE_STRING;
     private static String SUFFIX_SPECIAL_CHARS = CASE_INSENSITIVE_STRING + PUNCTUATION;
-
-    public static boolean pronounMatchFound(Set<String> pronouns, Set<String> tokens) {
-        return tokens
-                .parallelStream()
-                .anyMatch(token ->
-                        pronouns.parallelStream()
-                                .anyMatch(pronoun ->
-                                        Pattern.matches(String.format(WITHIN_SPECIAL_CHARS, pronoun), token)));
-
-    }
 
     public static boolean matchesWithAnyPrefix(String patternPart, String word) {
         return matchesFormattedString(PREFIX_SPECIAL_CHARS, patternPart, word);
