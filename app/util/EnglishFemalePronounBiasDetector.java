@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 
 public class EnglishFemalePronounBiasDetector extends BiasDetector {
-    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("she", "her", "she's", "she'll", "her's", "hers", "shell", "shes"));
+    private static final Set<String> PRONOUNS = new HashSet(Arrays.asList("she", "her", "she's", "she'll", "her's", "hers", "shell", "shes", "she’s", "she’ll", "her’s")); //note the special quotes
 
     @Override
     Locale getLocale() {

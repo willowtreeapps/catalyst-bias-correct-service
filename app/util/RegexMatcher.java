@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 public class RegexMatcher {
     private static String ANY_LETTER = "[\\p{L}\\p{M}]+";
-    private static String PUNCTUATION = "(\\p{P}*)";
+    private static String PUNCTUATION = "([~`+=|\\^$<>\\p{P}]*)";
     private static String CASE_INSENSITIVE_STRING = "((?i)%s)";
     private static String WITHIN_SPECIAL_CHARS = PUNCTUATION + CASE_INSENSITIVE_STRING + PUNCTUATION;
     private static String PREFIX_SPECIAL_CHARS = PUNCTUATION + CASE_INSENSITIVE_STRING;
