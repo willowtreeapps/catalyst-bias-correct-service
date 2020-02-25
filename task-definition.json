@@ -5,7 +5,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/catalyst-bias-correct-taskdef-<environment>",
+          "awslogs-group": "/ecs/bias-correct-<environment>",
           "awslogs-region": "<aws-region>",
           "awslogs-stream-prefix": "ecs"
         }
@@ -26,11 +26,11 @@
       ],
       "memoryReservation": 512,
       "image": "<aws-account-id>.dkr.ecr.<aws-region>.amazonaws.com/bias-correct-service:latest",
-      "name": "bias-correct-image"
+      "name": "bias-correct"
     }
   ],
   "taskRoleArn": "arn:aws:iam::<aws-account-id>:role/ecsTaskExecutionRole",
-  "family": "catalyst-bias-correct-taskdef-<environment>",
+  "family": "bias-correct-task-definition-<environment>",
   "requiresCompatibilities": [
     "EC2"
   ]
