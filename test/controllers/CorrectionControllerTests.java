@@ -145,6 +145,26 @@ public class CorrectionControllerTests extends WithApplication {
     }
 
     @Test
+    public void testMultiWordPronoun() {
+        var json = Json.toJson(Map.of(
+                "context", "context-value",
+                "text", "sie ist theatralisch"
+        ));
+        Http.RequestBuilder request = new Http.RequestBuilder()
+                .method(POST)
+                .uri(CORRECT_URI)
+                .bodyJson(json);
+
+        Result result = route(app, request);
+        var body = contentAsBytes(result).toArray();
+        var response = Json.fromJson(Json.parse(body), CorrectionController.CorrectResponse.class);
+        assertEquals(OK, result.status());
+        assertEquals("sie ist passioniert", response.correction);
+        assertEquals("sie ist theatralisch", response.input);
+        assertEquals("context-value", response.context);
+    }
+
+    @Test
     public void testSimpleEnglishCorrections() {
         try (CSVReader reader = new CSVReader(new FileReader("test/files/en.csv"))) {
 
