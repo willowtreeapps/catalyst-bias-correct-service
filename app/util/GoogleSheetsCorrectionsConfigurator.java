@@ -25,19 +25,18 @@ public class GoogleSheetsCorrectionsConfigurator<TParser extends CorrectionsPars
 
     @Override
     public BiasCorrector createCorrector(Randomizer randomizer) {
-        CSVParser parser = null;
-        try {
-            parser = CSVParser.parse(_startingUrl, Charset.defaultCharset(), CSVFormat.DEFAULT);
+        try (CSVParser parser = CSVParser.parse(_startingUrl, Charset.defaultCharset(), CSVFormat.DEFAULT)) {
+
+            var mapping = Streams.stream(parser.iterator())
+                    .map(GoogleSheetsCorrectionsConfigurator::GetLocaleAndURLFromRecord)
+                    .filter( tuple -> tuple != null)
+                    .map( x -> Pair.with(x.getValue0(), _parser.parse(x.getValue1())))
+                    .collect(toMap(x -> x.getValue0(), x -> Utility.collectIntoMapOfSuggestionsByTriggerWord(x.getValue1())));
+            return new MapBackedBiasCorrector(mapping, randomizer, _detector, _tokenizer);
+
         } catch (IOException e) {
             return null;
         }
-
-        var mapping = Streams.stream(parser.iterator())
-                .map(GoogleSheetsCorrectionsConfigurator::GetLocaleAndURLFromRecord)
-                .filter( tuple -> tuple != null)
-                .map( x -> Pair.with(x.getValue0(), _parser.parse(x.getValue1())))
-                .collect(toMap(x -> x.getValue0(), x -> Utility.collectIntoMapOfSuggestionsByTriggerWord(x.getValue1())));
-        return new MapBackedBiasCorrector(mapping, randomizer, _detector, _tokenizer);
     }
 
     private static Pair<Locale, URL> GetLocaleAndURLFromRecord(CSVRecord record) {
