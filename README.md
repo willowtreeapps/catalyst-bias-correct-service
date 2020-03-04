@@ -17,7 +17,13 @@ The only configuration variable needed for this service is `PLAY_SECRET_KEY`. Yo
 1. On the next page of the wizard, ensure that the **Project JDK** is set to **JDK 12**.
 1. Enable Auto-Import for **sbt projects**.
 
-Run the service using `sbt run`. Navigate to http://localhost:9000 to verify that the service is running.
+Setup Configuration
+1. Add configuration template **sbt Task**.
+2. In the window that opens, enter "compile; run" into the **Tasks** input.
+3. Uncheck the **Use sbt shell** option.
+4. Add the above configuration as environment variables.
+
+Press Run. Navigate to http://localhost:9000 to verify that the service is running.
 
 ### [Docker](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
 sbt provides the infrastructure to easily build out a Docker image from our application.  The current build.sbt file is configured with the options to use OpenJDK 12 on Alpine.  This is intended to keep our shipping image as lean as possible.  The application.conf file has also been updated to capture a few values from the environment when available.  Finally, the build.sbt file has the option to configure the current version from an environment variable (which will be captured in the docker container tags).
