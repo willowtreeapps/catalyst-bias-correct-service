@@ -3,7 +3,7 @@ A microservice to provide detection and suggestion corrections for gendered lang
 
 ## Prerequisites
 * [JDK 12](https://www.oracle.com/java/technologies/javase/jdk12-archive-downloads.html)
-* [sbt](https://www.scala-sbt.org/download.html)
+* [sbt 1.3.5](https://www.scala-sbt.org/download.html)
 * [docker](https://hub.docker.com/editions/community/docker-ce-desktop-mac)
 
 ## Run
@@ -35,6 +35,16 @@ docker run -p 8000:9000 -e PLAY_SECRET_KEY="$(head -c 30 /dev/random | base64)" 
 ```
 
 In the above example, we expose the host/local port 8000 to the container's port 9000 (the default port for the Play framework).  We've also chosen to generate a random secret key and use the default Docker tag.  If we had specified an environment variable during the build phase (`VERSION_NUMBER=example sbt docker:publishLocal`), then our tag would be `bias-correct-service:example`.
+
+### Terminal
+You can also run the application using your terminal. Make sure that you have sbt 1.3.5 installed. Export the PLAY_SECRET_KEY if you had not done so previously, then run the application using sbt.
+```
+sbt version
+
+export PLAY_SECRET_KEY={PLAY_SECRET_KEY}
+
+sbt run
+```
 
 ## Data format
 
